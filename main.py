@@ -1,8 +1,16 @@
-import FinanceDataReader as fdr
+import sys
+from data.data import *
 
-# 삼성전자(005930) 전체 (1996-11-05 ~ 현재)
-df = fdr.DataReader('005930')
 
-# Apple(AAPL), 2017-01-01 ~ Now
+def help():
+    print("--init : 주식 데이터를 세팅합니다.")
 
-print(df)
+
+
+if __name__ == "__main__":
+    
+    if len(sys.argv) < 2 :
+        help()
+    
+    elif sys.argv[1] == "--init":
+        init_data()
