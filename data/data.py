@@ -7,7 +7,7 @@ from datetime import datetime, date, timedelta
 
 def process_data(target):
 
-    f = open("./data/origin/" + target + ".txt", 'r')
+    f = open("./data/origin/" + target + ".txt", 'r', encoding='UTF8')
     data = str(f.readlines()).replace("\\n", "")
     processed_data = ast.literal_eval(data)
     f.close()
@@ -21,10 +21,12 @@ def fetch_data():
 
 def load_data():
     global code_data
-    global date_data
+    global name_data
+    global sector_data
     
     code_data = process_data("code")
-    date_data = process_data("date")
+    name_data = process_data("name")
+    sector_data = process_data("sector")
 
 
 def append_price_data(codes):
@@ -50,18 +52,20 @@ def append_price_data(codes):
 def merge_data():
     load_data()
 
-    assert len(code_data) == len(date_data)
+    assert len(code_data) == len(name_data) == len(sector_data)
 
     stock_data = {}
     for i in range(len(code_data)):
         new_stock_data = {}
-        new_stock_data['date'] = date_data[i]
-        new_stock_data['52_high'] = 1300
+        new_stock_data['name'] = name_data[i]
+        new_stock_data['sector'] = sector_data[i]
 
         stock_data[code_data[i]] = new_stock_data
 
-    stock_data = json.dumps(stock_data)
-    with open("./data/origin/stock_data.json", 'w') as f:
+
+    stock_data = json.dumps(stock_data, ensure_ascii=False, indent=4)
+    print(stock_data)
+    with open("./data/origin/stock_data.json", 'w', encoding='UTF8') as f:
         f.write(stock_data)
     #print(stock_data)
 
@@ -76,5 +80,5 @@ def merge_data():
 
 merge_data()
 
-append_price_data(process_data("code"))
+#append_price_data(process_data("code"))
 
